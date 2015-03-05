@@ -13,7 +13,7 @@ class Solution():
         return data
     def median(self, lst):
         if len(lst) % 2 == 0:
-            return (lst[len(lst) / 2 - 1] + lst[len(lst) / 2]) / 2.0
+            return lst[len(lst) / 2 - 1]
         return lst[len(lst) / 2]
         
     def insertSort(self, data):
