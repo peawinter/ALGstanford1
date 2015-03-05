@@ -34,7 +34,7 @@ class Solution():
             if not num in dict:
                 dict[num] = num
         for target in targets.keys():
-            if targets[target] == 1:
+            if targets[target] >= 1:
                 output += 1
         return output
         
