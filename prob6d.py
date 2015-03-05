@@ -3,7 +3,7 @@
 import urllib2
 import sys
 
-def readData(self):
+def readData():
     # return sorted data
     url = 'https://d396qusza40orc.cloudfront.net/algo1%2Fprogramming_prob%2F2sum.txt'
     file = urllib2.urlopen(url)
