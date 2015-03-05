@@ -2,6 +2,7 @@
 
 import urllib2
 import sys
+from time import time
 
 class Solution:
     def readData(self):
@@ -13,32 +14,25 @@ class Solution:
             data.append(int(line))
             # bisect.insort(bisect, int(line))
         return data
-    
-    def hashData(self, data):
-        hashTable = dict()
-        for x in data:
-            hashTable[x] = True
-        print 'Size of hashtable', len(hashTable)
-        return hashTable
-    
-    def count2SumTarget(self, data, hashTable, target):
-        for x in data:
-            if target - x in hashTable:
-                return True
-        return False
-    
-    def count2SumAll(self):
+
+    def two_sum(array):
+        WIDTH = 10000
+        out = set()
+        for i in array:
+            lower = bisect.bisect_left(array, -WIDTH - i)
+            upper = bisect.bisect_right(array, WIDTH - i)
+            out |= set([i + j for j in array[lower:upper]])
+        return out
+
+    def main():
         data = self.readData()
+        data.sort()
         print data[:10]
-        hashTable = self.hashData(data)
-        output = []
-        for target in range(-10000, 10001):
-            if self.count2SumTarget(data, hashTable, target):
-                output.append(target)
-        print output
-        return len(output)
-        
+        return len(two_sum(data))
+
+
 if __name__ == '__main__':
     sol = Solution()
-    count = sol.count2SumAll()
-    print count
+    start = time()
+    print sol.main()
+    print time() - start
