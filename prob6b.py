@@ -11,6 +11,7 @@ class Solution():
         for line in file:
             data.append(int(line))
         return data
+        
     def median(self, lst):
         if len(lst) % 2 == 0:
             return lst[len(lst) / 2 - 1]
