@@ -2,6 +2,7 @@
 
 import urllib2
 import sys
+import bisect
 from time import time
 
 class Solution:
@@ -15,7 +16,7 @@ class Solution:
             # bisect.insort(bisect, int(line))
         return data
 
-    def two_sum(array):
+    def two_sum(self, array):
         WIDTH = 10000
         out = set()
         for i in array:
@@ -24,11 +25,11 @@ class Solution:
             out |= set([i + j for j in array[lower:upper]])
         return out
 
-    def main():
+    def main(self):
         data = self.readData()
         data.sort()
         print data[:10]
-        return len(two_sum(data))
+        return len(self.two_sum(data))
 
 
 if __name__ == '__main__':
