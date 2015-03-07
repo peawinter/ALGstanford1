@@ -2,20 +2,20 @@
 import sys
 import time
 import heapq
+import urllib2
 import resource
 from itertools import groupby
 from collections import defaultdict
 
 
 #set rescursion limit and stack size limit
-sys.setrecursionlimit(10 ** 6)
-resource.setrlimit(resource.RLIMIT_STACK, (2 ** 29, 2 ** 30))
+# sys.setrecursionlimit(10 ** 6)
+# resource.setrlimit(resource.RLIMIT_STACK, (2 ** 29, 2 ** 30))
 
 
 class Tracker(object):
     """Keeps track of the current time, current source, component leader,
     finish time of each node and the explored nodes.
-    
     'self.leader' is informs of {node: leader, ...}."""
 
     def __init__(self):
@@ -88,12 +88,13 @@ def scc(graph):
 def main():
     start = time.time()
     graph = defaultdict(list)
-    with open('SCC.txt') as file_in:
-    #with open('test.txt') as file_in:
-        for line in file_in:
-            x = line.strip().split()
-            x1, x2 = int(x[0]), int(x[1])
-            graph[x1].append(x2)
+    # url = 'http://spark-public.s3.amazonaws.com/algo1/programming_prob/SCC.txt'
+    # file = urllib2.urlopen(url)
+    file = open('prob4test1.txt')
+    for line in file:
+        x = line.strip().split()
+        x1, x2 = int(x[0]), int(x[1])
+        graph[x1].append(x2)
     t1 = time.time() - start
     print t1
     groups = scc(graph)
