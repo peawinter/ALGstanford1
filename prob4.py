@@ -1,9 +1,14 @@
 from collections import defaultdict
 from time import time
 from itertools import groupby
+import sys
 import heapq
 import urllib2
 import resource
+
+#set rescursion limit and stack size limit
+sys.setrecursionlimit(10 ** 6)
+resource.setrlimit(resource.RLIMIT_STACK, (2 ** 29, 2 ** 30))
 
 class Solution():
     def readData(self):
