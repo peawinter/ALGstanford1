@@ -5,19 +5,10 @@ import heapq
 import urllib2
 import resource
 
-class Tracker(object):
-    def __init__(self):
-        self.current_time = 0
-        self.current_source = None
-        self.leader = {}
-        self.finish_time = {}
-        self.explored = set()
-    
 class Solution():
     def readData(self):
-        # url = 'http://spark-public.s3.amazonaws.com/algo1/programming_prob/SCC.txt'
-        # file = urllib2.urlopen(url)
-        file = open('prob4test1.txt')
+        url = 'http://spark-public.s3.amazonaws.com/algo1/programming_prob/SCC.txt'
+        file = urllib2.urlopen(url)
         graph = defaultdict(list)
         graphR = defaultdict(list)
         nodes = set()
@@ -28,58 +19,60 @@ class Solution():
             graphR[end].append(start)
             nodes.add(start)
             nodes.add(end)
-        print graph[1]
-        print graphR[1]
-        nodes = sorted(list(nodes), reverse = True)
+        nodes = sorted(list(nodes))
         return (graph, graphR, nodes)
-    
-    def dfs(self, graph_dict, node, tracker):
-        """Inner loop explores all nodes in a SCC. Graph represented as a dict,
-        {tail: [head_list], ...}. Depth first search runs recursively and keeps
-        track of the parameters"""
-        tracker.explored.add(node)
-        tracker.leader[node] = tracker.current_source
-        for head in graph_dict[node]:
-            if head not in tracker.explored:
-                self.dfs(graph_dict, head, tracker)
-        tracker.current_time += 1
-        tracker.finish_time[node] = tracker.current_time
-    
-    def dfs_loop(self, graph_dict, nodes, tracker):
+        
+    def myDFShelper(self, graphDict, node, leader):
+        self.visited.add(node)
+        for nextnode in graphDict[node]:
+            if not nextnode in self.visited:
+                self.myDFShelper(graphDict, nextnode, leader)
+        self.count += 1
+        self.finishtime[node] = self.count
+        self.leader[node] = leader
+        
+    def myDFS(self, graphDict, nodes):
         for node in nodes:
-            if node not in tracker.explored:
-                tracker.current_source = node
-                self.dfs(graph_dict, node, tracker)
-    
-    def scc(self, graph, graphR, nodes):
-        """First runs dfs_loop on reversed graph with nodes in decreasing order,
-        then runs dfs_loop on original graph with nodes in decreasing finish
-        time order(obtained from first run). Return a dict of {leader: SCC}."""
-        out = defaultdict(list)
-        tracker1 = Tracker()
-        tracker2 = Tracker()
-        # dfs reverse graph with nodes in decreasing order
-        self.dfs_loop(graphR, nodes, tracker1)
-        sorted_nodes = sorted(tracker1.finish_time,
-                              key=tracker1.finish_time.get, reverse=True)
-        # dfs graph with nodes in decreasing finish time order
-        self.dfs_loop(graph, sorted_nodes, tracker2)
-        for lead, vertex in groupby(sorted(tracker2.leader, key=tracker2.leader.get),
-                                    key=tracker2.leader.get):
-            out[lead] = list(vertex)
-        return out
-    
+            if not node in self.visited:
+                self.myDFShelper(graphDict, node, node)
+                
+    def mySCC(self, graph, graphR, nodes):
+        # DFS the reverse graph
+        self.count = 0
+        self.visited = set()
+        self.leader = {}
+        self.finishtime = {}
+        self.myDFS(graphR, nodes)
+        # DFS the original graph
+        self.count = 0
+        nodes = sorted(self.finishtime, key=self.finishtime.get, reverse=True)
+        self.count = 0
+        self.visited = set()
+        self.leader = {}
+        self.finishtime = {}
+        self.myDFS(graph, nodes)
+        # count the SCC
+        output = defaultdict(list)
+        for nodes, leader in self.leader.items():
+            output[leader].append(nodes)
+        return output
+        
     def main(self):
         start = time()
         (graph, graphR, nodes) = self.readData()
         print time() - start
-        print graph
-        print graphR
-        print nodes
-        output = self.scc(graph, graphR, nodes)
-        print output
-        return output
+        output = self.mySCC(graph, graphR, nodes)
+        print time() - start
+        key5 = heapq.nlargest(5, output, key=lambda x: len(output[x]))
+        result = []
+        for i in range(5):
+            try:
+                result.append(len(output[key5[i]]))
+            except:
+                result.append(0)
+        print time() - start
+        return result
     
 if __name__ == '__main__':
     sol = Solution()
-    sol.main()
+    print sol.main()
